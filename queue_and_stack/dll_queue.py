@@ -9,7 +9,7 @@ class ListNode:
         self.next = next
 
     """Wrap the given value in a ListNode and insert it
-    after this node. Note that this node could already
+    after this node. Note this node could already
     have a next node it is point to."""
 
     def insert_after(self, value):
@@ -19,7 +19,7 @@ class ListNode:
             current_next.prev = self.next
 
     """Wrap the given value in a ListNode and insert it
-    before this node. Note that this node could already
+    before this node. Note this node could already
     have a previous node it is point to."""
 
     def insert_before(self, value):
