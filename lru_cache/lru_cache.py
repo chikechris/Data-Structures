@@ -1,3 +1,9 @@
+
+from doubly_linked_list import DoublyLinkedList
+import sys
+sys.path.append('./doubly_linked_list.py')
+
+
 class LRUCache:
     """
     Our LRUCache class keeps track of the max number of nodes it
@@ -5,9 +11,13 @@ class LRUCache:
     linked list that holds the key-value entries in the correct
     order, as well as a storage dict that provides fast access
     to every node stored in the cache.
-    """
+     """
+
     def __init__(self, limit=10):
-        pass
+        self.limit = limit
+        self.size = 0
+        self.list = DoublyLinkedList()
+        self.cache = dict()
 
     """
     Retrieves the value associated with the given key. Also
@@ -15,9 +25,20 @@ class LRUCache:
     such that the pair is considered most-recently used.
     Returns the value associated with the key or None if the
     key-value pair doesn't exist in the cache.
-    """
+     """
+
     def get(self, key):
-        pass
+        # Check if key is in cache
+        if key in self.cache.keys():
+            # The cache is holding a reference to the node
+            node = self.cache[key]
+            # Move the node to the head because it's being accessed, or "used"
+            self.list.move_to_front(node)
+            # Return the value of the node: Tuple ('key', 'value')
+            return node.value[1]
+        else:
+            # If the key doesn't exist in the cache, return None
+            return None
 
     """
     Adds the given key-value pair to the cache. The newly-
@@ -28,6 +49,26 @@ class LRUCache:
     case that the key already exists in the cache, we simply
     want to overwrite the old value associated with the key with
     the newly-specified value.
-    """
+     """
+
     def set(self, key, value):
-        pass
+        # Check if key is in cache
+        if key in self.cache.keys():
+            # The cache is holding a reference to the node
+            node = self.cache[key]
+            # Update the existing node's value
+            node.value = (key, value)
+            # Move the node to the head because it's being accessed, or "used"
+            self.list.move_to_front(node)
+        else:
+            # Check to see if the limit is reached
+            if self.size == self.limit:
+                # Delete the oldest from the cache
+                del self.cache[self.list.remove_from_tail()[0]]
+                self.size -= 1
+            # Add the new node to the head
+            node = (key, value)
+            self.list.add_to_head(node)
+            # Set the cache to reference the node
+            self.cache[key] = self.list.head
+            self.size += 1
